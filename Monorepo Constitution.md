@@ -11,7 +11,6 @@ This document establishes the guiding principles, rules, and responsibilities fo
 1. **Single Source of Truth**: All code lives in the monorepo; no duplicated forks or hidden copies.
 2. **Atomic Changes**: Cross-project changes must be made in one atomic commit to preserve consistency.
 3. **Hermetic Builds**: Builds and tests must be reproducible and isolated from local developer environments.
-4. **Transparency**: All changes are visible and traceable through version control and CI pipelines.
 
 ---
 
@@ -61,22 +60,22 @@ This document establishes the guiding principles, rules, and responsibilities fo
 1. Internal dependencies should reference source, not vendored binaries.
 2. External dependencies must be declared centrally, pinned to specific versions.
 3. Vulnerability scans must run periodically; unsafe libraries must be blocked at introduction.
-4. **Cross-Team Library Updates**: Shared dependency upgrades must follow a disciplined process:
+4. **Cross-Team Library Upgrades**: When a dependency bump touches multiple teams, we handle it in a simple, disciplined way:
 
-   * **Central Ownership**: All shared versions live in a single manifest owned by Infra.
-   * **Automation First**: Use bots or scripts to propose updates and fan out changes.
-   * **Compatibility Rules**: Minor and patch bumps can roll forward quickly; majors require an RFC and migration plan.
-   * **Ring Rollouts**: Start in core services, then expand to the rest once stable.
-   * **Testing & Signals**: CI must run unit, integration, and compatibility checks; canary deploys must be monitored.
-   * **Communication**: Updates are announced in weekly digests; affected teams get migration timelines and support.
-   * **Deprecation & Removal**: Old versions are blocked once the migration window passes.
-   * **Rollback Safety**: Always keep a last-known-good lockfile for fast revert.
+   * All shared versions are kept in one central file, owned by Infra.
+   * Upgrades are proposed by an automation job or bot, not ad‑hoc.
+   * Minor and patch updates should roll quickly; majors require an RFC with justification and migration notes.
+   * Rollouts happen in stages: first core infra, then gradually across the rest of the repo once signals are clean.
+   * CI must prove builds and tests are green; canary deploys give extra safety.
+   * Communication is key: updates are announced, deadlines are clear, and teams get support for migrations.
+   * Old versions are blocked once the migration window closes.
+   * We always keep a known‑good lockfile so we can roll back fast if needed.
 
 ---
 
 ## 8. Governance
 
-1. **Stewards**: A rotating group of senior engineers act as monorepo stewards.
+1. **Stewards**: A designated group responsible for monorepo governance, RFC reviews, and enforcing build and testing rules.
 2. **Decision Process**: Major changes are proposed as RFCs; consensus or steward approval required.
 3. **Amendments**: Changes to this constitution require steward approval and public review.
 
